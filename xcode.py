@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 import os
+import shlex
 import subprocess
 from datetime import datetime
 import wrapper
 
 
-wrapper_command = "java -jar /Users/ccampbell/Veracode/Source/vosp-api-wrappers-java-19.2.5.6.jar -action uploadandscan -appname verademo-swift -createprofile false".split()
+wrapper_command = "java -jar /Users/ccampbell/Veracode/Source/vosp-api-wrappers-java-19.2.5.6.jar -action uploadandscan -appname verademo-swift -createprofile false -version '{}' -filepath '{}'"
 
 
 def build_bca():
@@ -22,7 +23,7 @@ def build_bca():
         if len(output_split) == 2:
             bca_file = output_split[1][:-1]
             date = datetime.utcnow().strftime("%-d %b %Y %H:%M")
-            command = wrapper_command + ["-version", date, "-filepath", bca_file]
+            command = shlex.split(wrapper_command.format(date, bca_file))
             wrapper.run_wrapper(command)
 
 
